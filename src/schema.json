@@ -1,5 +1,4 @@
 {
-    "$id":"https://webdev.greatagereboot.com/assets/tasks/schema/schema.json",
     "title":"ActiveTask",
     "description":"A task for the Great Age Reboot application",
     "type":"object",
@@ -754,7 +753,7 @@
                       },
                       "value":{
                          "type":[
-                            "object",
+                            "number",
                             "null"
                          ]
                       }
