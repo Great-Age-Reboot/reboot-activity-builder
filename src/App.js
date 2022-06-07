@@ -125,7 +125,8 @@ function App() {
   const [tabValue, setTabValue] = React.useState(0);
   const [formData, setFormData] = React.useState({
     obj: exampleActivity, 
-    json: JSON.stringify(exampleActivity, null, 2)
+    json: JSON.stringify(exampleActivity, null, 2),
+    error: false,
   });
   function handleTabChange(event, newTabValue) {
     setTabValue(newTabValue);
@@ -134,19 +135,24 @@ function App() {
     const newFormData = {
       obj: newFormDataObj,
       json: JSON.stringify(newFormDataObj, null, 2),
+      error: false,
     }
     setFormData(newFormData);
   }
   function handleFormDataJsonChange(event, newFormDataJson) {
     let newFormDataObj;
+    let error;
     try {
       newFormDataObj = JSON.parse(newFormDataJson);
+      error = false;
     } catch (e) {
       newFormDataObj = formData.obj;
+      error = true;
     }
     const newFormData = {
       obj: newFormDataObj,
       json: newFormDataJson,
+      error: error,
     }
     setFormData(newFormData);
   }
@@ -172,6 +178,8 @@ function App() {
           multiline={true} 
           fullWidth={true}
           onChange={e => handleFormDataJsonChange(e, e.target.value)}
+          helperText={formData.error ? "Invalid JSON" : "JSON"}
+          error={formData.error}
         />
       </TabPanel>
     </Box>
