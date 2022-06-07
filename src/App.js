@@ -3,6 +3,7 @@ import Form from '@rjsf/material-ui/v5';
 import {Box, Tab, Tabs, TextField} from '@mui/material'
 import React from 'react';
 import MDEditor from '@uiw/react-md-editor';
+import { default as Mermaid, getMermaidString } from "./Mermaid";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -120,13 +121,13 @@ const uiSchema = {
   }
 }
 
-
 function App() {
   const [tabValue, setTabValue] = React.useState(0);
   const [formData, setFormData] = React.useState({
     obj: exampleActivity, 
     json: JSON.stringify(exampleActivity, null, 2),
     error: false,
+    mermaid: getMermaidString(exampleActivity)
   });
   function handleTabChange(event, newTabValue) {
     setTabValue(newTabValue);
@@ -136,6 +137,7 @@ function App() {
       obj: newFormDataObj,
       json: JSON.stringify(newFormDataObj, null, 2),
       error: false,
+      mermaid: getMermaidString(newFormDataObj)
     }
     setFormData(newFormData);
   }
@@ -153,6 +155,7 @@ function App() {
       obj: newFormDataObj,
       json: newFormDataJson,
       error: error,
+      mermaid: getMermaidString(newFormDataObj)
     }
     setFormData(newFormData);
   }
@@ -162,6 +165,7 @@ function App() {
         <Tabs value={tabValue} onChange={handleTabChange}>
           <Tab label="Builder" />
           <Tab label="JSON" />
+          <Tab label="Mermaid" />
         </Tabs>
       </Box>
       <TabPanel value={tabValue} index={0}>
@@ -181,6 +185,11 @@ function App() {
           helperText={formData.error ? "Invalid JSON" : "JSON"}
           error={formData.error}
         />
+      </TabPanel>
+      <TabPanel value={tabValue} index={2}>
+        <div className="App">
+          <Mermaid chart={formData.mermaid} />
+        </div>
       </TabPanel>
     </Box>
   );
