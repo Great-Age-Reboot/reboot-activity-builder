@@ -125,7 +125,7 @@ function jsonStringify(obj) {
   const optionalObjectProperties = [ "stepNavigationRules", "userInfoRules", "progressRule", "templateVariableRules", "habitBuilderProgressRule" ];
   let objCopy = {};
   for (const [key, value] of Object.entries(obj)) {
-    if (!optionalObjectProperties.includes(key) || Object.keys(value).length != 0) {
+    if (!optionalObjectProperties.includes(key) || Object.keys(value).length !== 0) {
       objCopy[key] = value;
     }
   }
