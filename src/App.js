@@ -121,11 +121,23 @@ const uiSchema = {
   }
 }
 
+function jsonStringify(obj) {
+  const optionalObjectProperties = [ "stepNavigationRules", "userInfoRules", "progressRule", "templateVariableRules", "habitBuilderProgressRule" ];
+  let objCopy = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (!optionalObjectProperties.includes(key) || Object.keys(value).length != 0) {
+      objCopy[key] = value;
+    }
+  }
+  let json = JSON.stringify(objCopy, null, 2)
+  return json
+}
+
 function App() {
   const [tabValue, setTabValue] = React.useState(0);
   const [formData, setFormData] = React.useState({
     obj: exampleActivity, 
-    json: JSON.stringify(exampleActivity, null, 2),
+    json: jsonStringify(exampleActivity),
     error: false,
     mermaid: getMermaidString(exampleActivity)
   });
@@ -135,7 +147,7 @@ function App() {
   function handleFormDataObjChange(event, newFormDataObj) {
     const newFormData = {
       obj: newFormDataObj,
-      json: JSON.stringify(newFormDataObj, null, 2),
+      json: jsonStringify(newFormDataObj),
       error: false,
       mermaid: getMermaidString(newFormDataObj)
     }
