@@ -12,36 +12,45 @@ function getDestStepName(nodesById, stepIdentifier) {
     }
     return "E";
 }
-  
+
+function getStepProperties(steps, index) {
+    let step = steps[index];
+    let stepName = `S${index}`;
+    let stepIdentifier = "undefined";
+    if (step && step.identifier && typeof step.identifier === "string") {
+        stepIdentifier = step.identifier;
+    }
+    return [step, stepName, stepIdentifier];
+}
+
 export function getMermaidString(obj) {
     let nodesById = {};
     if (obj && obj.steps) {
         let lines = ["flowchart LR"];
         lines.push(`A((start))`);
         for (let i = 0; i < obj.steps.length; i++) {
-            let step = obj.steps[i];
-            let stepName = `S${i}`;
-            nodesById[step.identifier] = stepName;
-            lines.push(`${stepName}[${step.identifier}]`);
+            let [, stepName, stepIdentifier] = getStepProperties(obj.steps, i);
+            nodesById[stepIdentifier] = stepName;
+            lines.push(`${stepName}[${stepIdentifier}]`);
         }
         lines.push(`E((finish))`);
         if (obj.steps.length === 0) {
             lines.push(`A --> E`)
         } else {
-            let step = obj.steps[0]
-            lines.push(`A --> S0[${step.identifier}]`)
+            let [, stepName, stepIdentifier] = getStepProperties(obj.steps, 0);
+            lines.push(`A --> ${stepName}[${stepIdentifier}]`)
         }
         nodesById["start"] = "A";
         for (let i = 0; i < obj.steps.length; i++) {
-            let step = obj.steps[i];
-            let stepName = `S${i}`;
+            let [, stepName, stepIdentifier] = getStepProperties(obj.steps, i);
             let navRule;
-            if (obj.stepNavigationRules && step.identifier in obj.stepNavigationRules) {
-                navRule = obj.stepNavigationRules[step.identifier];
+            if (obj.stepNavigationRules && stepIdentifier in obj.stepNavigationRules) {
+                navRule = obj.stepNavigationRules[stepIdentifier];
             } else if (i + 1 < obj.steps.length) {
+                let [, , nextStepIdentifier] = getStepProperties(obj.steps, i + 1);
                 navRule = {
                     "resultPredicates": [],
-                    "defaultStepIdentifier": obj.steps[i + 1].identifier
+                    "defaultStepIdentifier": nextStepIdentifier
                 }
             } else {
                 navRule = {
