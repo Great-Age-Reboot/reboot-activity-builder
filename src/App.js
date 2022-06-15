@@ -44,11 +44,44 @@ const uiSchema = {
         "items": {
           "text": {
             "ui:widget": getMarkdownWidget
+          },
+          "answerFormat": {
+            "textChoices": {
+              "value": {
+                "ui:field": "StringField",
+                "ui:widget": "TextWidget"
+              }
+            }
+          }
+        }
+      },
+      "answerFormat": {
+        "textChoices": {
+          "items": {
+            "value": {
+              "ui:field": "StringField",
+              "ui:widget": "TextWidget"
+            }
           }
         }
       }
     }
   },
+  // "stepNavigationRules": {
+  //   "ui:widget": "hidden"
+  // },
+  // "userInfoRules": {
+  //   "ui:widget": "hidden"
+  // },
+  // "progressRule": {
+  //   "ui:widget": "hidden"
+  // },
+  // "templateVariableRules": {
+  //   "ui:widget": "hidden"
+  // },
+  // "habitBuilderProgressRule": {
+  //   "ui:widget": "hidden"
+  // },
   "ui:submitButtonOptions": {
     "norender": true,
   }
@@ -67,12 +100,14 @@ function jsonStringify(obj) {
 }
 
 function App() {
+  let exampleJson = jsonStringify(exampleActivity)
+  let mermaidString = getMermaidString(exampleActivity)
   const [tabValue, setTabValue] = React.useState(0);
   const [formData, setFormData] = React.useState({
     obj: exampleActivity, 
-    json: jsonStringify(exampleActivity),
+    json: exampleJson,
     error: false,
-    mermaid: getMermaidString(exampleActivity)
+    mermaid: mermaidString
   });
   function handleTabChange(event, newTabValue) {
     setTabValue(newTabValue);

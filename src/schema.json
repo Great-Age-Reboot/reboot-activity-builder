@@ -159,7 +159,7 @@
           "type": "string"
         },
         "continueButtonText": {
-          "description": "The text that should be displayed for the continue button.",
+          "description": "Optional field to override the default text displayed for the continue button.",
           "type": "string"
         }
       },
@@ -187,6 +187,7 @@
           "type": "string"
         },
         "detailText": {
+          "description": "Small text displayed below the title.",
           "type": "string"
         },
         "checklistItems": {
@@ -205,7 +206,7 @@
           "type": "string"
         },
         "continueButtonText": {
-          "description": "The text that should be displayed for the continue button.",
+          "description": "Optional field to override the default text displayed for the continue button.",
           "type": "string"
         }
       },
@@ -253,6 +254,11 @@
           "type": "string"
         },
         "text": {
+          "description": "The text that should be displayed on the page. This is markdown.",
+          "type": "string"
+        },
+        "detailText": {
+          "description": "Small text displayed below the title.",
           "type": "string"
         },
         "permissionTypes": {
@@ -275,7 +281,7 @@
           }
         },
         "continueButtonText": {
-          "description": "The text that should be displayed for the continue button.",
+          "description": "Optional field to override the default text displayed for the continue button.",
           "type": "string"
         }
       },
@@ -295,7 +301,7 @@
           "type": "string"
         },
         "continueButtonText": {
-          "description": "The text that should be displayed for the continue button.",
+          "description": "Optional field to override the default text displayed for the continue button.",
           "type": "string"
         }
       },
@@ -322,7 +328,7 @@
           "type": "string"
         },
         "continueButtonText": {
-          "description": "The text that should be displayed for the continue button.",
+          "description": "Optional field to override the default text displayed for the continue button.",
           "type": "string"
         }
       },
@@ -379,7 +385,7 @@
           "format": "uri-reference"
         },
         "continueButtonText": {
-          "description": "The text that should be displayed for the continue button.",
+          "description": "Optional field to override the default text displayed for the continue button.",
           "type": "string"
         }
       },
@@ -418,7 +424,7 @@
           "$ref": "#/$defs/AnswerFormat"
         },
         "continueButtonText": {
-          "description": "The text that should be displayed for the continue button.",
+          "description": "Optional field to override the default text displayed for the continue button.",
           "type": "string"
         }
       },
@@ -479,7 +485,7 @@
           }
         },
         "continueButtonText": {
-          "description": "The text that should be displayed for the continue button.",
+          "description": "Optional field to override the default text displayed for the continue button.",
           "type": "string"
         }
       },
@@ -709,7 +715,7 @@
                 "type": "string"
               },
               "value": {
-                "type": ["number", "null"]
+                "type": ["object", "string", "number", "boolean", "null"]
               }
             },
             "required": ["text", "value"],
