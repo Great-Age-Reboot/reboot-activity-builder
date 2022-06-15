@@ -48,7 +48,7 @@ const uiSchema = {
           "answerFormat": {
             "textChoices": {
               "value": {
-                "ui:field": "StringField",
+                "ui:field": "NumberField",
                 "ui:widget": "TextWidget"
               }
             }
@@ -59,7 +59,7 @@ const uiSchema = {
         "textChoices": {
           "items": {
             "value": {
-              "ui:field": "StringField",
+              "ui:field": "NumberField",
               "ui:widget": "TextWidget"
             }
           }
