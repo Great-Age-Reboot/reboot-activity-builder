@@ -1,871 +1,807 @@
 {
-   "title": "ActiveTask",
-   "description": "A task for the Great Age Reboot application",
-   "type": "object",
-   "properties": {
-      "identifier": {
-         "description": "The unique identifier for the task",
-         "type": "string"
+  "title": "ActiveTask",
+  "description": "A task for the Great Age Reboot application",
+  "type": "object",
+  "properties": {
+    "identifier": {
+      "description": "The unique identifier for the task",
+      "type": "string"
+    },
+    "steps": {
+      "description": "The steps for the task",
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "title": "InstructionStep",
+            "$ref": "#/$defs/InstructionStep"
+          },
+          {
+            "title": "ChecklistStep",
+            "$ref": "#/$defs/ChecklistStep"
+          },
+          {
+            "title": "CountdownStep",
+            "$ref": "#/$defs/CountdownStep"
+          },
+          {
+            "title": "RequestPermissionsStep",
+            "$ref": "#/$defs/RequestPermissionsStep"
+          },
+          {
+            "title": "OneMileWalkTestStep",
+            "$ref": "#/$defs/OneMileWalkTestStep"
+          },
+          {
+            "title": "OneMileWalkTestResultsStep",
+            "$ref": "#/$defs/OneMileWalkTestResultsStep"
+          },
+          {
+            "title": "TypeformSurveyStep",
+            "$ref": "#/$defs/TypeformSurveyStep"
+          },
+          {
+            "title": "VideoStep",
+            "$ref": "#/$defs/VideoStep"
+          },
+          {
+            "title": "FormStep",
+            "$ref": "#/$defs/FormStep"
+          },
+          {
+            "title": "QuestionStep",
+            "$ref": "#/$defs/QuestionStep"
+          }
+        ]
+      }
+    },
+    "stepNavigationRules": {
+      "description": "A map from step identifier strings to rules about where to go next",
+      "type": "object",
+      "patternProperties": {
+        ".": {
+          "type": "object",
+          "properties": {
+            "resultPredicates": {
+              "description": "List of JsonLogic tests",
+              "type": "array",
+              "items": {
+                "description": "A JsonLogic condition that when evaluated on the results will determine whether we should jump to the corresponding destination step",
+                "type": "object"
+              }
+            },
+            "destinationStepIdentifiers": {
+              "description": "List of step identifiers",
+              "items": {
+                "description": "The identifier of the destination step that should be used if the corresponding predicate evaluated to true",
+                "type": "string"
+              }
+            },
+            "defaultStepIdentifier": {
+              "description": "Step identifer to use if none of the resultPredicates returned true",
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "storageRules": {
+      "description": "Rules defining what will be written to the server upon completion of the task",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/HealthDataStorageRule"
+      }
+    },
+    "userInfoRules": {
+      "description": "Rules defining what will be made available to the task as variables",
+      "type": "object",
+      ".": {
+        "$ref": "#/$defs/StorageRule"
+      }
+    },
+    "progressRule": {
+      "description": "Logical rules used to determine task progress. Should return a number between 0 and 1",
+      "type": "object"
+    },
+    "templateVariableRules": {
+      "description": "Rules defining what will be made available to the template system as variables",
+      "type": "object",
+      ".": {
+        "description": "Logical rules used to determine the variable value.",
+        "type": "object"
+      }
+    },
+    "habitBuilderProgressPoints": {
+      "description": "Set of breakpoints for the habit builder.",
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    },
+    "habitBuilderProgressRule": {
+      "description": "Logical rules used to determine task progress. Should return an integer indicating the completion count. This field is only suported for habit builder tasks.",
+      "type": "object"
+    },
+    "timesToComplete": {
+      "description": "The number of times a habit builder activity should be performed per period. This field is only suported for habit builder tasks.",
+      "type": "number"
+    }
+  },
+  "required": ["identifier", "steps"],
+  "additionalProperties": false,
+  "$defs": {
+    "InstructionStep": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "type": "string",
+          "pattern": "^InstructionStep$",
+          "default": "InstructionStep"
+        },
+        "identifier": {
+          "description": "Identifier of the step.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Short title generally displayed at the top of the step page.",
+          "type": "string"
+        },
+        "text": {
+          "description": "The text that should be displayed on the page. This is markdown.",
+          "type": "string"
+        },
+        "detailText": {
+          "description": "Small text displayed below the title.",
+          "type": "string"
+        },
+        "image": {
+          "description": "An optional image to display below the title.",
+          "type": "string"
+        },
+        "continueButtonText": {
+          "description": "The text that should be displayed for the continue button.",
+          "type": "string"
+        }
       },
-      "steps": {
-         "description": "The steps for the task",
-         "type": "array",
-         "items": {
+      "required": ["$type", "identifier"],
+      "additionalProperties": false
+    },
+    "ChecklistStep": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "type": "string",
+          "pattern": "^ChecklistStep$",
+          "default": "ChecklistStep"
+        },
+        "identifier": {
+          "description": "Identifier of the step.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Short title generally displayed at the top of the step page.",
+          "type": "string"
+        },
+        "text": {
+          "description": "The text that will be displayed about the checklist. This is markdown.",
+          "type": "string"
+        },
+        "detailText": {
+          "type": "string"
+        },
+        "checklistItems": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "checklistStatus": {
+          "type": "array",
+          "items": {
+            "type": "boolean"
+          }
+        },
+        "image": {
+          "type": "string"
+        },
+        "continueButtonText": {
+          "description": "The text that should be displayed for the continue button.",
+          "type": "string"
+        }
+      },
+      "required": ["$type", "identifier", "checklistItems", "checklistStatus"],
+      "additionalProperties": false
+    },
+    "CountdownStep": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "type": "string",
+          "pattern": "^CountdownStep$",
+          "default": "CountdownStep"
+        },
+        "identifier": {
+          "description": "Identifier of the step.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Short title generally displayed at the top of the step page.",
+          "type": "string"
+        },
+        "stepDuration": {
+          "description": "Number of seconds that the timer will countdown from.",
+          "type": "number"
+        }
+      },
+      "required": ["$type", "identifier", "stepDuration"],
+      "additionalProperties": false
+    },
+    "RequestPermissionsStep": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "type": "string",
+          "pattern": "^RequestPermissionsStep$",
+          "default": "RequestPermissionsStep"
+        },
+        "identifier": {
+          "description": "Identifier of the step.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Short title generally displayed at the top of the step page.",
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "permissionTypes": {
+          "type": "array",
+          "items": {
             "oneOf": [
-               {
-                  "title": "InstructionStep",
-                  "$ref": "#/$defs/InstructionStep"
-               },
-               {
-                  "title": "ChecklistStep",
-                  "$ref": "#/$defs/ChecklistStep"
-               },
-               {
-                  "title": "CountdownStep",
-                  "$ref": "#/$defs/CountdownStep"
-               },
-               {
-                  "title": "RequestPermissionsStep",
-                  "$ref": "#/$defs/RequestPermissionsStep"
-               },
-               {
-                  "title": "OneMileWalkTestStep",
-                  "$ref": "#/$defs/OneMileWalkTestStep"
-               },
-               {
-                  "title": "OneMileWalkTestResultsStep",
-                  "$ref": "#/$defs/OneMileWalkTestResultsStep"
-               },
-               {
-                  "title": "TypeformSurveyStep",
-                  "$ref": "#/$defs/TypeformSurveyStep"
-               },
-               {
-                  "title": "VideoStep",
-                  "$ref": "#/$defs/VideoStep"
-               },
-               {
-                  "title": "FormStep",
-                  "$ref": "#/$defs/FormStep"
-               },
-               {
-                  "title": "QuestionStep",
-                  "$ref": "#/$defs/QuestionStep"
-               }
+              {
+                "title": "HealthPermissionType",
+                "$ref": "#/$defs/HealthPermissionType"
+              },
+              {
+                "title": "NotificationPermissionType",
+                "$ref": "#/$defs/NotificationPermissionType"
+              },
+              {
+                "title": "MotionPermissionType",
+                "$ref": "#/$defs/MotionPermissionType"
+              }
             ]
-         }
+          }
+        },
+        "continueButtonText": {
+          "description": "The text that should be displayed for the continue button.",
+          "type": "string"
+        }
       },
-      "stepNavigationRules": {
-         "description": "A map from step identifier strings to rules about where to go next",
-         "type": "object",
-         "patternProperties": {
-            ".": {
-               "type": "object",
-               "properties": {
-                  "resultPredicates": {
-                     "description": "List of JsonLogic tests",
-                     "type": "array",
-                     "items": {
-                        "description": "A JsonLogic condition that when evaluated on the results will determine whether we should jump to the corresponding destination step",
-                        "type": "object"
-                     }
-                  },
-                  "destinationStepIdentifiers": {
-                     "description": "List of step identifiers",
-                     "items": {
-                        "description": "The identifier of the destination step that should be used if the corresponding predicate evaluated to true",
-                        "type": "string"
-                     }
-                  },
-                  "defaultStepIdentifier": {
-                     "description": "Step identifer to use if none of the resultPredicates returned true",
-                     "type": "string"
-                  }
-               }
+      "required": ["$type", "identifier", "permissionTypes"],
+      "additionalProperties": false
+    },
+    "OneMileWalkTestStep": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "type": "string",
+          "pattern": "^OneMileWalkTestStep$",
+          "default": "OneMileWalkTestStep"
+        },
+        "identifier": {
+          "description": "Identifier of the step.",
+          "type": "string"
+        },
+        "continueButtonText": {
+          "description": "The text that should be displayed for the continue button.",
+          "type": "string"
+        }
+      },
+      "required": ["$type", "identifier"],
+      "additionalProperties": false
+    },
+    "OneMileWalkTestResultsStep": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "type": "string",
+          "pattern": "^OneMileWalkTestResultsStep$",
+          "default": "OneMileWalkTestResultsStep"
+        },
+        "identifier": {
+          "description": "Identifier of the step.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Short title generally displayed at the top of the step page.",
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "continueButtonText": {
+          "description": "The text that should be displayed for the continue button.",
+          "type": "string"
+        }
+      },
+      "required": ["$type", "identifier"],
+      "additionalProperties": false
+    },
+    "TypeformSurveyStep": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "type": "string",
+          "pattern": "^TypeformSurveyStep$",
+          "default": "TypeformSurveyStep"
+        },
+        "identifier": {
+          "description": "Identifier of the step.",
+          "type": "string"
+        },
+        "formId": {
+          "description": "Typeform id of the desired form.",
+          "type": "string"
+        }
+      },
+      "required": ["$type", "identifier", "formId"],
+      "additionalProperties": false
+    },
+    "VideoStep": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "type": "string",
+          "pattern": "^VideoStep$",
+          "default": "VideoStep"
+        },
+        "identifier": {
+          "description": "Identifier of the step.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Short title generally displayed at the top of the step page.",
+          "type": "string"
+        },
+        "text": {
+          "description": "Text shown with the video. This is generally a transcript of the video. This is markdown.",
+          "type": "string"
+        },
+        "fullScreen": {
+          "description": "Whether the video should be played in full screen portrait mode",
+          "type": "boolean"
+        },
+        "videoUrl": {
+          "description": "URL where the video can be accessed. YouTube URLs can also be resolved, though there will be some delay.",
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "continueButtonText": {
+          "description": "The text that should be displayed for the continue button.",
+          "type": "string"
+        }
+      },
+      "required": ["$type", "identifier", "videoUrl"],
+      "additionalProperties": false
+    },
+    "QuestionStep": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "type": "string",
+          "pattern": "^QuestionStep$",
+          "default": "QuestionStep"
+        },
+        "identifier": {
+          "description": "Identifier of the step.",
+          "type": "string"
+        },
+        "optional": {
+          "description": "Whether the step can be skipped",
+          "type": "boolean"
+        },
+        "title": {
+          "description": "Short title generally displayed at the top of the step page.",
+          "type": "string"
+        },
+        "question": {
+          "description": "The main text of the question. This is markdown, so you may want to include the markdown for heading5.",
+          "type": "string"
+        },
+        "text": {
+          "description": "Additional text of the question.",
+          "type": "string"
+        },
+        "answerFormat": {
+          "$ref": "#/$defs/AnswerFormat"
+        },
+        "continueButtonText": {
+          "description": "The text that should be displayed for the continue button.",
+          "type": "string"
+        }
+      },
+      "required": ["$type", "identifier", "answerFormat"],
+      "additionalProperties": false
+    },
+    "FormStep": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "type": "string",
+          "pattern": "^FormStep$",
+          "default": "FormStep"
+        },
+        "identifier": {
+          "description": "Identifier of the step.",
+          "type": "string"
+        },
+        "optional": {
+          "description": "Whether the step can be skipped",
+          "type": "boolean"
+        },
+        "title": {
+          "description": "Short title generally displayed at the top of the step page.",
+          "type": "string"
+        },
+        "text": {
+          "description": "This field is inherited from the base class, but isn't displayed.",
+          "type": "string"
+        },
+        "formItems": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "identifier": {
+                "description": "Identifier of the form item.",
+                "type": "string"
+              },
+              "optional": {
+                "description": "Whether a value must be provided to the question.",
+                "type": "boolean"
+              },
+              "text": {
+                "description": "The main text of the question. This is markdown, so you may want to include the markdown for heading5.",
+                "type": "string"
+              },
+              "placeholder": {
+                "description": "Initial value to display as the answer.",
+                "type": "string"
+              },
+              "answerFormat": {
+                "$ref": "#/$defs/AnswerFormat"
+              }
+            },
+            "required": ["identifier", "text", "answerFormat"],
+            "additionalProperties": false
+          }
+        },
+        "continueButtonText": {
+          "description": "The text that should be displayed for the continue button.",
+          "type": "string"
+        }
+      },
+      "required": ["$type", "identifier", "formItems"],
+      "additionalProperties": false
+    },
+    "StorageRule": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The generic name for the healthdata record",
+          "type": "string"
+        },
+        "destination": {
+          "description": "The specific name for the healthdata record",
+          "type": "string"
+        },
+        "strategy": {
+          "description": "The method or technique used to store the record",
+          "type": "string"
+        },
+        "jsonLogic": {
+          "description": "Logical rules used to determine what value to store based on the task results",
+          "type": "object"
+        }
+      },
+      "required": ["jsonLogic"],
+      "additionalProperties": false
+    },
+    "HealthDataStorageRule": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The generic name for the healthdata record",
+          "type": "string"
+        },
+        "destination": {
+          "description": "The specific name for the healthdata record",
+          "type": "string"
+        },
+        "strategy": {
+          "description": "The method or technique used to store the record",
+          "type": "string"
+        },
+        "jsonLogic": {
+          "description": "Logical rules used to determine what value to store based on the task results",
+          "type": "object"
+        }
+      },
+      "required": ["name", "destination", "strategy", "jsonLogic"],
+      "additionalProperties": false
+    },
+    "HealthPermissionType": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "type": "string",
+          "pattern": "^HealthPermissionType$",
+          "default": "HealthPermissionType"
+        },
+        "readPermissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "writePermissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["$type", "readPermissions", "writePermissions"],
+      "additionalProperties": false
+    },
+    "NotificationPermissionType": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "type": "string",
+          "pattern": "^NotificationPermissionType$",
+          "default": "NotificationPermissionType"
+        },
+        "authorizationOptions ": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["$type"],
+      "additionalProperties": false
+    },
+    "MotionPermissionType": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "type": "string",
+          "pattern": "^MotionPermissionType$",
+          "default": "MotionPermissionType"
+        }
+      },
+      "required": ["$type"],
+      "additionalProperties": false
+    },
+    "AnswerFormat": {
+      "oneOf": [
+        {
+          "title": "BooleanAnswerFormat",
+          "$ref": "#/$defs/BooleanAnswerFormat"
+        },
+        {
+          "title": "NumericAnswerFormat",
+          "$ref": "#/$defs/NumericAnswerFormat"
+        },
+        {
+          "title": "TextAnswerFormat",
+          "$ref": "#/$defs/TextAnswerFormat"
+        },
+        {
+          "title": "TextChoiceAnswerFormat",
+          "$ref": "#/$defs/TextChoiceAnswerFormat"
+        },
+        {
+          "title": "TimeOfDayAnswerFormat",
+          "$ref": "#/$defs/TimeOfDayAnswerFormat"
+        },
+        {
+          "title": "TimeIntervalAnswerFormat",
+          "$ref": "#/$defs/TimeIntervalAnswerFormat"
+        },
+        {
+          "title": "DateAnswerFormat",
+          "$ref": "#/$defs/DateAnswerFormat"
+        }
+      ]
+    },
+    "BooleanAnswerFormat": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "type": "string",
+          "pattern": "^BooleanAnswerFormat$",
+          "default": "BooleanAnswerFormat"
+        },
+        "yes": {
+          "type": "string"
+        },
+        "no": {
+          "type": "string"
+        }
+      },
+      "required": ["$type", "yes", "no"],
+      "additionalProperties": false
+    },
+    "NumericAnswerFormat": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "type": "string",
+          "pattern": "^NumericAnswerFormat$",
+          "default": "NumericAnswerFormat"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "style": {
+          "type": "string",
+          "enum": ["Decimal", "Integer"]
+        },
+        "minimum": {
+          "type": "number"
+        },
+        "maximum": {
+          "type": "number"
+        },
+        "defaultNumericAnswer": {
+          "type": "number"
+        }
+      },
+      "required": ["$type", "style"],
+      "additionalProperties": false
+    },
+    "TextAnswerFormat": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "type": "string",
+          "pattern": "^TextAnswerFormat$",
+          "default": "TextAnswerFormat"
+        },
+        "validationRegularExpression": {
+          "type": "string"
+        },
+        "invalidMessage": {
+          "type": "string"
+        },
+        "defaultTextAnswer": {
+          "type": "string"
+        },
+        "maximumLength": {
+          "type": "integer"
+        }
+      },
+      "required": ["$type"],
+      "additionalProperties": false
+    },
+    "TextChoiceAnswerFormat": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "type": "string",
+          "pattern": "^TextChoiceAnswerFormat$",
+          "default": "TextChoiceAnswerFormat"
+        },
+        "style": {
+          "type": "string",
+          "enum": ["SingleChoice", "MultipleChoice"]
+        },
+        "textChoices": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string"
+              },
+              "value": {
+                "type": ["number", "null"]
+              }
+            },
+            "required": ["text", "value"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["$type", "style", "textChoices"],
+      "additionalProperties": false
+    },
+    "TimeOfDayAnswerFormat": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "type": "string",
+          "pattern": "^TimeOfDayAnswerFormat$",
+          "default": "TimeOfDayAnswerFormat"
+        },
+        "defaultComponents": {
+          "type": "object",
+          "properties": {
+            "hours": {
+              "type": "number"
+            },
+            "minutes": {
+              "type": "number"
+            },
+            "seconds": {
+              "type": "number"
             }
-         }
+          },
+          "additionalProperties": false
+        }
       },
-      "storageRules": {
-         "description": "Rules defining what will be written to the server upon completion of the task",
-         "type": "array",
-         "items": {
-            "$ref": "#/$defs/HealthDataStorageRule"
-         }
-      },
-      "userInfoRules": {
-         "description": "Rules defining what will be made available to the task as variables",
-         "type": "object",
-         ".": {
-            "$ref": "#/$defs/StorageRule"
-         }
-      },
-      "progressRule": {
-         "description": "Logical rules used to determine task progress. Should return a number between 0 and 1",
-         "type": "object"
-      },
-      "templateVariableRules": {
-         "description": "Rules defining what will be made available to the template system as variables",
-         "type": "object",
-         ".": {
-            "description": "Logical rules used to determine the variable value.",
-            "type": "object"
-         }
-      },
-      "habitBuilderProgressPoints": {
-         "description": "Set of breakpoints for the habit builder.",
-         "type": "array",
-         "items": {
-            "type": "number"
-         }
-      },
-      "habitBuilderProgressRule": {
-         "description": "Logical rules used to determine task progress. Should return an integer indicating the completion count. This field is only suported for habit builder tasks.",
-         "type": "object"
-      },
-      "timesToComplete": {
-         "description": "The number of times a habit builder activity should be performed per period. This field is only suported for habit builder tasks.",
-         "type": "number"
-      }
-   },
-   "required": [
-      "identifier",
-      "steps"
-   ],
-   "additionalProperties": false,
-   "$defs": {
-      "InstructionStep": {
-         "type": "object",
-         "properties": {
-            "$type": {
-               "type": "string",
-               "pattern": "^InstructionStep$",
-               "default": "InstructionStep"
+      "required": ["$type"],
+      "additionalProperties": false
+    },
+    "TimeIntervalAnswerFormat": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "type": "string",
+          "pattern": "^TimeIntervalAnswerFormat$",
+          "default": "TimeIntervalAnswerFormat"
+        },
+        "defaultComponents": {
+          "type": "object",
+          "properties": {
+            "hours": {
+              "type": "number"
             },
-            "identifier": {
-               "description": "Identifier of the step.",
-               "type": "string"
+            "minutes": {
+              "type": "number"
             },
-            "title": {
-               "description": "Short title generally displayed at the top of the step page.",
-               "type": "string"
-            },
-            "text": {
-               "description": "The text that should be displayed on the page. This is markdown.",
-               "type": "string"
-            },
-            "detailText": {
-               "description": "Small text displayed below the title.",
-               "type": "string"
-            },
-            "image": {
-               "description": "An optional image to display below the title.",
-               "type": "string"
+            "seconds": {
+              "type": "number"
             }
-         },
-         "required": [
-            "$type",
-            "identifier"
-         ],
-         "additionalProperties": false
+          },
+          "additionalProperties": false
+        }
       },
-      "ChecklistStep": {
-         "type": "object",
-         "properties": {
-            "$type": {
-               "type": "string",
-               "pattern": "^ChecklistStep$",
-               "default": "ChecklistStep"
-            },
-            "identifier": {
-               "description": "Identifier of the step.",
-               "type": "string"
-            },
-            "title": {
-               "description": "Short title generally displayed at the top of the step page.",
-               "type": "string"
-            },
-            "text": {
-               "description": "The text that will be displayed about the checklist. This is markdown.",
-               "type": "string"
-            },
-            "detailText": {
-               "type": "string"
-            },
-            "checklistItems": {
-               "type": "array",
-               "items": {
-                  "type": "string"
-               }
-            },
-            "checklistStatus": {
-               "type": "array",
-               "items": {
-                  "type": "boolean"
-               }
-            },
-            "image": {
-               "type": "string"
-            }
-         },
-         "required": [
-            "$type",
-            "identifier",
-            "checklistItems",
-            "checklistStatus"
-         ],
-         "additionalProperties": false
+      "required": ["$type"],
+      "additionalProperties": false
+    },
+    "DateAnswerFormat": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "type": "string",
+          "pattern": "^DateAnswerFormat$",
+          "default": "DateAnswerFormat"
+        },
+        "style": {
+          "type": "string",
+          "enum": ["DateTime", "Date"]
+        },
+        "calendar": {
+          "type": "string",
+          "enum": ["Gregorian"]
+        },
+        "minimumDate": {
+          "type": "string"
+        },
+        "maximumDate": {
+          "type": "string"
+        },
+        "defaultDate": {
+          "type": "string"
+        }
       },
-      "CountdownStep": {
-         "type": "object",
-         "properties": {
-            "$type": {
-               "type": "string",
-               "pattern": "^CountdownStep$",
-               "default": "CountdownStep"
-            },
-            "identifier": {
-               "description": "Identifier of the step.",
-               "type": "string"
-            },
-            "title": {
-               "description": "Short title generally displayed at the top of the step page.",
-               "type": "string"
-            },
-            "stepDuration": {
-               "description": "Number of seconds that the timer will countdown from.",
-               "type": "number"
-            }
-         },
-         "required": [
-            "$type",
-            "identifier",
-            "stepDuration"
-         ],
-         "additionalProperties": false
-      },
-      "RequestPermissionsStep": {
-         "type": "object",
-         "properties": {
-            "$type": {
-               "type": "string",
-               "pattern": "^RequestPermissionsStep$",
-               "default": "RequestPermissionsStep"
-            },
-            "identifier": {
-               "description": "Identifier of the step.",
-               "type": "string"
-            },
-            "title": {
-               "description": "Short title generally displayed at the top of the step page.",
-               "type": "string"
-            },
-            "text": {
-               "type": "string"
-            },
-            "permissionTypes": {
-               "type": "array",
-               "items": {
-                  "oneOf": [
-                     {
-                        "title": "HealthPermissionType",
-                        "$ref": "#/$defs/HealthPermissionType"
-                     },
-                     {
-                        "title": "NotificationPermissionType",
-                        "$ref": "#/$defs/NotificationPermissionType"
-                     },
-                     {
-                        "title": "MotionPermissionType",
-                        "$ref": "#/$defs/MotionPermissionType"
-                     }
-                  ]
-               }
-            }
-         },
-         "required": [
-            "$type",
-            "identifier",
-            "permissionTypes"
-         ],
-         "additionalProperties": false
-      },
-      "OneMileWalkTestStep": {
-         "type": "object",
-         "properties": {
-            "$type": {
-               "type": "string",
-               "pattern": "^OneMileWalkTestStep$",
-               "default": "OneMileWalkTestStep"
-            },
-            "identifier": {
-               "description": "Identifier of the step.",
-               "type": "string"
-            }
-         },
-         "required": [
-            "$type",
-            "identifier"
-         ],
-         "additionalProperties": false
-      },
-      "OneMileWalkTestResultsStep": {
-         "type": "object",
-         "properties": {
-            "$type": {
-               "type": "string",
-               "pattern": "^OneMileWalkTestResultsStep$",
-               "default": "OneMileWalkTestResultsStep"
-            },
-            "identifier": {
-               "description": "Identifier of the step.",
-               "type": "string"
-            },
-            "title": {
-               "description": "Short title generally displayed at the top of the step page.",
-               "type": "string"
-            },
-            "image": {
-               "type": "string"
-            }
-         },
-         "required": [
-            "$type",
-            "identifier"
-         ],
-         "additionalProperties": false
-      },
-      "TypeformSurveyStep": {
-         "type": "object",
-         "properties": {
-            "$type": {
-               "type": "string",
-               "pattern": "^TypeformSurveyStep$",
-               "default": "TypeformSurveyStep"
-            },
-            "identifier": {
-               "description": "Identifier of the step.",
-               "type": "string"
-            },
-            "formId": {
-               "description": "Typeform id of the desired form.",
-               "type": "string"
-            }
-         },
-         "required": [
-            "$type",
-            "identifier",
-            "formId"
-         ],
-         "additionalProperties": false
-      },
-      "VideoStep": {
-         "type": "object",
-         "properties": {
-            "$type": {
-               "type": "string",
-               "pattern": "^VideoStep$",
-               "default": "VideoStep"
-            },
-            "identifier": {
-               "description": "Identifier of the step.",
-               "type": "string"
-            },
-            "title": {
-               "description": "Short title generally displayed at the top of the step page.",
-               "type": "string"
-            },
-            "text": {
-               "description": "Text shown with the video. This is generally a transcript of the video. This is markdown.",
-               "type": "string"
-            },
-            "fullScreen": {
-               "description": "Whether the video should be played in full screen portrait mode",
-               "type": "boolean"
-            },
-            "videoUrl": {
-               "description": "URL where the video can be accessed. YouTube URLs can also be resolved, though there will be some delay.",
-               "type": "string",
-               "format": "uri-reference"
-            }
-         },
-         "required": [
-            "$type",
-            "identifier",
-            "videoUrl"
-         ],
-         "additionalProperties": false
-      },
-      "QuestionStep": {
-         "type": "object",
-         "properties": {
-            "$type": {
-               "type": "string",
-               "pattern": "^QuestionStep$",
-               "default": "QuestionStep"
-            },
-            "identifier": {
-               "description": "Identifier of the step.",
-               "type": "string"
-            },
-            "optional": {
-               "description": "Whether the step can be skipped",
-               "type": "boolean"
-            },
-            "title": {
-               "description": "Short title generally displayed at the top of the step page.",
-               "type": "string"
-            },
-            "question": {
-               "description": "The main text of the question. This is markdown, so you may want to include the markdown for heading5.",
-               "type": "string"
-            },
-            "text": {
-               "description": "Additional text of the question.",
-               "type": "string"
-            },
-            "answerFormat": {
-               "$ref": "#/$defs/AnswerFormat"
-            }
-         },
-         "required": [
-            "$type",
-            "identifier",
-            "answerFormat"
-         ],
-         "additionalProperties": false
-      },
-      "FormStep": {
-         "type": "object",
-         "properties": {
-            "$type": {
-               "type": "string",
-               "pattern": "^FormStep$",
-               "default": "FormStep"
-            },
-            "identifier": {
-               "description": "Identifier of the step.",
-               "type": "string"
-            },
-            "optional": {
-               "description": "Whether the step can be skipped",
-               "type": "boolean"
-            },
-            "title": {
-               "description": "Short title generally displayed at the top of the step page.",
-               "type": "string"
-            },
-            "text": {
-               "description": "This field is inherited from the base class, but isn't displayed.",
-               "type": "string"
-            },
-            "formItems": {
-               "type": "array",
-               "items": {
-                  "type": "object",
-                  "properties": {
-                     "identifier": {
-                        "description": "Identifier of the form item.",
-                        "type": "string"
-                     },
-                     "optional": {
-                        "description": "Whether a value must be provided to the question.",
-                        "type": "boolean"
-                     },
-                     "text": {
-                        "description": "The main text of the question. This is markdown, so you may want to include the markdown for heading5.",
-                        "type": "string"
-                     },
-                     "placeholder": {
-                        "description": "Initial value to display as the answer.",
-                        "type": "string"
-                     },
-                     "answerFormat": {
-                        "$ref": "#/$defs/AnswerFormat"
-                     }
-                  },
-                  "required": [
-                     "identifier",
-                     "text",
-                     "answerFormat"
-                  ],
-                  "additionalProperties": false
-               }
-            }
-         },
-         "required": [
-            "$type",
-            "identifier",
-            "formItems"
-         ],
-         "additionalProperties": false
-      },
-      "StorageRule": {
-         "type": "object",
-         "properties": {
-            "name": {
-               "description": "The generic name for the healthdata record",
-               "type": "string"
-            },
-            "destination": {
-               "description": "The specific name for the healthdata record",
-               "type": "string"
-            },
-            "strategy": {
-               "description": "The method or technique used to store the record",
-               "type": "string"
-            },
-            "jsonLogic": {
-               "description": "Logical rules used to determine what value to store based on the task results",
-               "type": "object"
-            }
-         },
-         "required": [
-            "jsonLogic"
-         ],
-         "additionalProperties": false
-      },
-      "HealthDataStorageRule": {
-         "type": "object",
-         "properties": {
-            "name": {
-               "description": "The generic name for the healthdata record",
-               "type": "string"
-            },
-            "destination": {
-               "description": "The specific name for the healthdata record",
-               "type": "string"
-            },
-            "strategy": {
-               "description": "The method or technique used to store the record",
-               "type": "string"
-            },
-            "jsonLogic": {
-               "description": "Logical rules used to determine what value to store based on the task results",
-               "type": "object"
-            }
-         },
-         "required": [
-            "name",
-            "destination",
-            "strategy",
-            "jsonLogic"
-         ],
-         "additionalProperties": false
-      },
-      "HealthPermissionType": {
-         "type": "object",
-         "properties": {
-            "$type": {
-               "type": "string",
-               "pattern": "^HealthPermissionType$",
-               "default": "HealthPermissionType"
-            },
-            "readPermissions": {
-               "type": "array",
-               "items": {
-                  "type": "string"
-               }
-            },
-            "writePermissions": {
-               "type": "array",
-               "items": {
-                  "type": "string"
-               }
-            }
-         },
-         "required": [
-            "$type",
-            "readPermissions",
-            "writePermissions"
-         ],
-         "additionalProperties": false
-      },
-      "NotificationPermissionType": {
-         "type": "object",
-         "properties": {
-            "$type": {
-               "type": "string",
-               "pattern": "^NotificationPermissionType$",
-               "default": "NotificationPermissionType"
-            },
-            "authorizationOptions ": {
-               "type": "array",
-               "items": {
-                  "type": "string"
-               }
-            }
-         },
-         "required": [
-            "$type"
-         ],
-         "additionalProperties": false
-      },
-      "MotionPermissionType": {
-         "type": "object",
-         "properties": {
-            "$type": {
-               "type": "string",
-               "pattern": "^MotionPermissionType$",
-               "default": "MotionPermissionType"
-            }
-         },
-         "required": [
-            "$type"
-         ],
-         "additionalProperties": false
-      },
-      "AnswerFormat": {
-         "oneOf": [
-            {
-               "title": "BooleanAnswerFormat",
-               "$ref": "#/$defs/BooleanAnswerFormat"
-            },
-            {
-               "title": "NumericAnswerFormat",
-               "$ref": "#/$defs/NumericAnswerFormat"
-            },
-            {
-               "title": "TextAnswerFormat",
-               "$ref": "#/$defs/TextAnswerFormat"
-            },
-            {
-               "title": "TextChoiceAnswerFormat",
-               "$ref": "#/$defs/TextChoiceAnswerFormat"
-            },
-            {
-               "title": "TimeOfDayAnswerFormat",
-               "$ref": "#/$defs/TimeOfDayAnswerFormat"
-            },
-            {
-               "title": "TimeIntervalAnswerFormat",
-               "$ref": "#/$defs/TimeIntervalAnswerFormat"
-            },
-            {
-               "title": "DateAnswerFormat",
-               "$ref": "#/$defs/DateAnswerFormat"
-            }
-         ]
-      },
-      "BooleanAnswerFormat": {
-         "type": "object",
-         "properties": {
-            "$type": {
-               "type": "string",
-               "pattern": "^BooleanAnswerFormat$",
-               "default": "BooleanAnswerFormat"
-            },
-            "yes": {
-               "type": "string"
-            },
-            "no": {
-               "type": "string"
-            }
-         },
-         "required": [
-            "$type",
-            "yes",
-            "no"
-         ],
-         "additionalProperties": false
-      },
-      "NumericAnswerFormat": {
-         "type": "object",
-         "properties": {
-            "$type": {
-               "type": "string",
-               "pattern": "^NumericAnswerFormat$",
-               "default": "NumericAnswerFormat"
-            },
-            "unit": {
-               "type": "string"
-            },
-            "style": {
-               "type": "string",
-               "enum": [
-                  "Decimal",
-                  "Integer"
-               ]
-            },
-            "minimum": {
-               "type": "number"
-            },
-            "maximum": {
-               "type": "number"
-            },
-            "defaultNumericAnswer": {
-               "type": "number"
-            }
-         },
-         "required": [
-            "$type",
-            "style"
-         ],
-         "additionalProperties": false
-      },
-      "TextAnswerFormat": {
-         "type": "object",
-         "properties": {
-            "$type": {
-               "type": "string",
-               "pattern": "^TextAnswerFormat$",
-               "default": "TextAnswerFormat"
-            },
-            "validationRegularExpression": {
-               "type": "string"
-            },
-            "invalidMessage": {
-               "type": "string"
-            },
-            "defaultTextAnswer": {
-               "type": "string"
-            },
-            "maximumLength": {
-               "type": "integer"
-            }
-         },
-         "required": [
-            "$type"
-         ],
-         "additionalProperties": false
-      },
-      "TextChoiceAnswerFormat": {
-         "type": "object",
-         "properties": {
-            "$type": {
-               "type": "string",
-               "pattern": "^TextChoiceAnswerFormat$",
-               "default": "TextChoiceAnswerFormat"
-            },
-            "style": {
-               "type": "string",
-               "enum": [
-                  "SingleChoice",
-                  "MultipleChoice"
-               ]
-            },
-            "textChoices": {
-               "type": "array",
-               "items": {
-                  "type": "object",
-                  "properties": {
-                     "text": {
-                        "type": "string"
-                     },
-                     "value": {
-                        "type": [
-                           "number",
-                           "null"
-                        ]
-                     }
-                  },
-                  "required": [
-                     "text",
-                     "value"
-                  ],
-                  "additionalProperties": false
-               }
-            }
-         },
-         "required": [
-            "$type",
-            "style",
-            "textChoices"
-         ],
-         "additionalProperties": false
-      },
-      "TimeOfDayAnswerFormat": {
-         "type": "object",
-         "properties": {
-            "$type": {
-               "type": "string",
-               "pattern": "^TimeOfDayAnswerFormat$",
-               "default": "TimeOfDayAnswerFormat"
-            },
-            "defaultComponents": {
-               "type": "object",
-               "properties": {
-                  "hours": {
-                     "type": "number"
-                  },
-                  "minutes": {
-                     "type": "number"
-                  },
-                  "seconds": {
-                     "type": "number"
-                  }
-               },
-               "additionalProperties": false
-            }
-         },
-         "required": [
-            "$type"
-         ],
-         "additionalProperties": false
-      },
-      "TimeIntervalAnswerFormat": {
-         "type": "object",
-         "properties": {
-            "$type": {
-               "type": "string",
-               "pattern": "^TimeIntervalAnswerFormat$",
-               "default": "TimeIntervalAnswerFormat"
-            },
-            "defaultComponents": {
-               "type": "object",
-               "properties": {
-                  "hours": {
-                     "type": "number"
-                  },
-                  "minutes": {
-                     "type": "number"
-                  },
-                  "seconds": {
-                     "type": "number"
-                  }
-               },
-               "additionalProperties": false
-            }
-         },
-         "required": [
-            "$type"
-         ],
-         "additionalProperties": false
-      },
-      "DateAnswerFormat": {
-         "type": "object",
-         "properties": {
-            "$type": {
-               "type": "string",
-               "pattern": "^DateAnswerFormat$",
-               "default": "DateAnswerFormat"
-            },
-            "style": {
-               "type": "string",
-               "enum": [
-                  "DateTime",
-                  "Date"
-               ]
-            },
-            "calendar": {
-               "type": "string",
-               "enum": [
-                  "Gregorian"
-               ]
-            },
-            "minimumDate": {
-               "type": "string"
-            },
-            "maximumDate": {
-               "type": "string"
-            },
-            "defaultDate": {
-               "type": "string"
-            }
-         },
-         "required": [
-            "$type"
-         ],
-         "additionalProperties": false
-      }
-   }
+      "required": ["$type"],
+      "additionalProperties": false
+    }
+  }
 }
