@@ -235,20 +235,7 @@
             "permissionTypes": {
               "type": "array",
               "items": {
-                "oneOf": [
-                  {
-                    "title": "HealthPermissionType",
-                    "$ref": "#/$defs/HealthPermissionType"
-                  },
-                  {
-                    "title": "NotificationPermissionType",
-                    "$ref": "#/$defs/NotificationPermissionType"
-                  },
-                  {
-                    "title": "MotionPermissionType",
-                    "$ref": "#/$defs/MotionPermissionType"
-                  }
-                ]
+                "$ref": "#/$defs/PermissionType"
               }
             },
             "continueButtonText": {
@@ -601,7 +588,7 @@
         },
         {
           "type": "object",
-          "title":  "NumericAnswerFormat",
+          "title": "NumericAnswerFormat",
           "properties": {
             "$type": {
               "type": "string",
