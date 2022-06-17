@@ -415,10 +415,6 @@
               "description": "Short title generally displayed at the top of the step page.",
               "type": "string"
             },
-            "text": {
-              "description": "This field is inherited from the base class, but isn't displayed.",
-              "type": "string"
-            },
             "formItems": {
               "type": "array",
               "items": {
