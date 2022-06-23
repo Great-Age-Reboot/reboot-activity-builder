@@ -242,8 +242,7 @@
             },
             "optional": {
               "description": "Whether the step can be skipped",
-              "type": "boolean",
-              "default": true
+              "type": "boolean"
             },
             "continueButtonText": {
               "description": "Optional field to override the default text displayed for the continue button.",
