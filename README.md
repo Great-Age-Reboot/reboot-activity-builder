@@ -12,3 +12,10 @@ The freeform object types, including jsonlogic fields are not editable
  - Some fields that are not markdown still use the markdown widget, because the field with the same name is markdown in a different object type.
  - Many of the objects that would be better represented as compact JSON get expanded/indented
  - For the objects in the textChoices array, the values could technically be general objects, but I've restricted them to either numbers or strings (input is converted to number when possible)
+
+### GitHub Pages
+This is deployed on GitHub pages at https://great-age-reboot.github.io/reboot-activity-builder/
+To update the build, use the following command on a checked out copy of the repository.
+```
+npm run deploy
+```
