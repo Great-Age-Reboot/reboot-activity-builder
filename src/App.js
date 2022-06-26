@@ -24,6 +24,8 @@ function getMarkdownWidget(props) {
 }
 
 const schema = require('./schema.json');
+//  I haven't debugged this, but the $id property prevents rjsf-jsonschema-react from properly handling the json
+delete schema["$id"];
 
 let exampleActivity = {};
 
