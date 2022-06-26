@@ -28,7 +28,7 @@
               "type": "array",
               "items": {
                 "description": "A JsonLogic condition that when evaluated on the results will determine whether we should jump to the corresponding destination step",
-                "type": "object"
+                "$ref": "#/$defs/JsonLogic"
               }
             },
             "destinationStepIdentifiers": {
@@ -66,7 +66,7 @@
     },
     "progressRule": {
       "description": "Logical rules used to determine task progress. Should return a number between 0 and 1",
-      "type": "object"
+      "$ref": "#/$defs/JsonLogic"
     },
     "templateVariableRules": {
       "description": "Rules defining what will be made available to the template system as variables",
@@ -74,7 +74,7 @@
       "patternProperties": {
         "^.*$": {
           "description": "Logical rules used to determine the variable value.",
-          "type": "object"
+          "$ref": "#/$defs/JsonLogic"
         }
       }
     },
@@ -87,7 +87,7 @@
     },
     "habitBuilderProgressRule": {
       "description": "Logical rules used to determine task progress. Should return an integer indicating the completion count. This field is only suported for habit builder tasks.",
-      "type": "object"
+      "$ref": "#/$defs/JsonLogic"
     },
     "timesToComplete": {
       "description": "The number of times a habit builder activity should be performed per period. This field is only suported for habit builder tasks.",
@@ -97,6 +97,30 @@
   "required": ["identifier", "steps"],
   "additionalProperties": false,
   "$defs": {
+    "Any": {
+      "oneOf": [
+        {
+          "title": "number",
+          "type": "number"
+        },
+        {
+          "title": "string",
+          "type": "string"
+        },
+        {
+          "title": "boolean",
+          "type": "boolean"
+        },
+        {
+          "title": "object",
+          "type": "object",
+          "nullable": true
+        }
+      ]
+    },
+    "JsonLogic": {
+      "$ref": "#/$defs/Any"
+    },
     "Step": {
       "oneOf": [
         {
@@ -504,7 +528,7 @@
         },
         "jsonLogic": {
           "description": "Logical rules used to determine what value to store based on the task results",
-          "type": "object"
+          "$ref": "#/$defs/JsonLogic"
         }
       },
       "required": ["jsonLogic"],
@@ -527,7 +551,7 @@
         },
         "jsonLogic": {
           "description": "Logical rules used to determine what value to store based on the task results",
-          "type": "object"
+          "$ref": "#/$defs/JsonLogic"
         }
       },
       "required": ["name", "destination", "strategy", "jsonLogic"],
@@ -691,25 +715,7 @@
                     "type": "string"
                   },
                   "value": {
-                    "anyOf": [
-                      {
-                        "title": "number",
-                        "type": "number"
-                      },
-                      {
-                        "title": "string",
-                        "type": "string"
-                      },
-                      {
-                        "title": "boolean",
-                        "type": "boolean"
-                      },
-                      {
-                        "title": "object",
-                        "type": "object",
-                        "nullable": true
-                      }
-                    ]
+                    "$ref": "#/$defs/Any"
                   }
                 },
                 "required": ["text", "value"],
