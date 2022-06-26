@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft-07/schema",
+  "$schema": "http://json-schema.org/draft-07/schema",
   "$id": "https://webdev.greatagereboot.com/assets/tasks/schema/schema.json",
   "title": "ActiveTask",
   "description": "A task for the Great Age Reboot application",
@@ -20,7 +20,7 @@
       "description": "A map from step identifier strings to rules about where to go next",
       "type": "object",
       "patternProperties": {
-        ".": {
+        "^.*$": {
           "type": "object",
           "properties": {
             "resultPredicates": {
@@ -33,6 +33,7 @@
             },
             "destinationStepIdentifiers": {
               "description": "List of step identifiers",
+              "type": "array",
               "items": {
                 "description": "The identifier of the destination step that should be used if the corresponding predicate evaluated to true",
                 "type": "string"
@@ -57,8 +58,10 @@
     "userInfoRules": {
       "description": "Rules defining what will be made available to the task as variables",
       "type": "object",
-      ".": {
-        "$ref": "#/$defs/StorageRule"
+      "patternProperties": {
+        "^.*$": {
+          "$ref": "#/$defs/StorageRule"
+        }
       }
     },
     "progressRule": {
@@ -68,9 +71,11 @@
     "templateVariableRules": {
       "description": "Rules defining what will be made available to the template system as variables",
       "type": "object",
-      ".": {
-        "description": "Logical rules used to determine the variable value.",
-        "type": "object"
+      "patternProperties": {
+        "^.*$": {
+          "description": "Logical rules used to determine the variable value.",
+          "type": "object"
+        }
       }
     },
     "habitBuilderProgressPoints": {
@@ -686,7 +691,25 @@
                     "type": "string"
                   },
                   "value": {
-                    "type": ["object", "string", "number", "boolean", "null"]
+                    "anyOf": [
+                      {
+                        "title": "number",
+                        "type": "number"
+                      },
+                      {
+                        "title": "string",
+                        "type": "string"
+                      },
+                      {
+                        "title": "boolean",
+                        "type": "boolean"
+                      },
+                      {
+                        "title": "object",
+                        "type": "object",
+                        "nullable": true
+                      }
+                    ]
                   }
                 },
                 "required": ["text", "value"],

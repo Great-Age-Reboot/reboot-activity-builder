@@ -54,16 +54,6 @@ const uiSchema = {
             }
           }
         }
-      },
-      "answerFormat": {
-        "textChoices": {
-          "items": {
-            "value": {
-              "ui:field": "NumberField",
-              "ui:widget": "TextWidget"
-            }
-          }
-        }
       }
     }
   },
