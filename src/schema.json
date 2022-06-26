@@ -111,16 +111,16 @@
               "description": "Short title generally displayed at the top of the step page.",
               "type": "string"
             },
-            "text": {
-              "description": "The text that should be displayed on the page. This is markdown.",
-              "type": "string"
-            },
             "detailText": {
               "description": "Small text displayed below the title.",
               "type": "string"
             },
             "image": {
               "description": "An optional image to display below the title.",
+              "type": "string"
+            },
+            "text": {
+              "description": "The text that should be displayed on the page. This is markdown.",
               "type": "string"
             },
             "continueButtonText": {
@@ -148,12 +148,16 @@
               "description": "Short title generally displayed at the top of the step page.",
               "type": "string"
             },
-            "text": {
-              "description": "The text that will be displayed about the checklist. This is markdown.",
-              "type": "string"
-            },
             "detailText": {
               "description": "Small text displayed below the title.",
+              "type": "string"
+            },
+            "image": {
+              "description": "An optional image to display below the title.",
+              "type": "string"
+            },
+            "text": {
+              "description": "The text that will be displayed about the checklist. This is markdown.",
               "type": "string"
             },
             "checklistItems": {
@@ -167,9 +171,6 @@
               "items": {
                 "type": "boolean"
               }
-            },
-            "image": {
-              "type": "string"
             },
             "continueButtonText": {
               "description": "Optional field to override the default text displayed for the continue button.",
@@ -226,12 +227,12 @@
               "description": "Short title generally displayed at the top of the step page.",
               "type": "string"
             },
-            "text": {
-              "description": "The text that should be displayed on the page. This is markdown.",
-              "type": "string"
-            },
             "detailText": {
               "description": "Small text displayed below the title.",
+              "type": "string"
+            },
+            "text": {
+              "description": "The text that should be displayed on the page. This is markdown.",
               "type": "string"
             },
             "permissionTypes": {
@@ -295,6 +296,7 @@
               "type": "string"
             },
             "image": {
+              "description": "An optional image to display below the title.",
               "type": "string"
             },
             "continueButtonText": {
@@ -385,6 +387,14 @@
               "description": "Short title generally displayed at the top of the step page.",
               "type": "string"
             },
+            "detailText": {
+              "description": "Small text displayed below the title.",
+              "type": "string"
+            },
+            "image": {
+              "description": "An optional image to display below the title.",
+              "type": "string"
+            },
             "question": {
               "description": "The main text of the question. This is markdown, so you may want to include the markdown for heading5.",
               "type": "string"
@@ -423,6 +433,14 @@
             },
             "title": {
               "description": "Short title generally displayed at the top of the step page.",
+              "type": "string"
+            },
+            "detailText": {
+              "description": "Small text displayed below the title.",
+              "type": "string"
+            },
+            "image": {
+              "description": "An optional image to display below the title.",
               "type": "string"
             },
             "formItems": {
