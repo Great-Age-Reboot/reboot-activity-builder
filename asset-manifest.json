@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/reboot-activity-builder/static/css/main.e819f221.css",
-    "main.js": "/reboot-activity-builder/static/js/main.1dc69ccc.js",
+    "main.css": "/reboot-activity-builder/static/css/main.9a020f43.css",
+    "main.js": "/reboot-activity-builder/static/js/main.d2903d00.js",
     "static/js/787.e0766ec7.chunk.js": "/reboot-activity-builder/static/js/787.e0766ec7.chunk.js",
     "index.html": "/reboot-activity-builder/index.html",
-    "main.e819f221.css.map": "/reboot-activity-builder/static/css/main.e819f221.css.map",
-    "main.1dc69ccc.js.map": "/reboot-activity-builder/static/js/main.1dc69ccc.js.map",
+    "main.9a020f43.css.map": "/reboot-activity-builder/static/css/main.9a020f43.css.map",
+    "main.d2903d00.js.map": "/reboot-activity-builder/static/js/main.d2903d00.js.map",
     "787.e0766ec7.chunk.js.map": "/reboot-activity-builder/static/js/787.e0766ec7.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.e819f221.css",
-    "static/js/main.1dc69ccc.js"
+    "static/css/main.9a020f43.css",
+    "static/js/main.d2903d00.js"
   ]
 }
