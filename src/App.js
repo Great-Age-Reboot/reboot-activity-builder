@@ -1,5 +1,6 @@
 import './App.css';
-import {default as Form, Widgets} from '@rjsf/material-ui/v5';
+import Form from '@rjsf/core'
+import { default as Widgets } from '@rjsf/core/lib/components/widgets';
 import {Box, Tab, Tabs, TextField} from '@mui/material'
 import React from 'react';
 import MDEditor from '@uiw/react-md-editor';
@@ -63,24 +64,24 @@ const uiSchema = {
       }
     }
   },
-  "stepNavigationRules": {
-    "ui:description": "disabled",
-    "ui:widget": "hidden"
-  },
-  "userInfoRules": {
-    "ui:description": "disabled",
-    "ui:widget": "hidden"
-  },
-  "progressRule": {
-    "ui:widget": "hidden"
-  },
-  "templateVariableRules": {
-    "ui:description": "disabled",
-    "ui:widget": "hidden"
-  },
-  "habitBuilderProgressRule": {
-    "ui:widget": "hidden"
-  },
+  // "stepNavigationRules": {
+  //   "ui:description": "disabled",
+  //   "ui:widget": "hidden"
+  // },
+  // "userInfoRules": {
+  //   "ui:description": "disabled",
+  //   "ui:widget": "hidden"
+  // },
+  // "progressRule": {
+  //   "ui:widget": "hidden"
+  // },
+  // "templateVariableRules": {
+  //   "ui:description": "disabled",
+  //   "ui:widget": "hidden"
+  // },
+  // "habitBuilderProgressRule": {
+  //   "ui:widget": "hidden"
+  // },
   "ui:submitButtonOptions": {
     "norender": true,
   }

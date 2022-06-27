@@ -1,3 +1,5 @@
+@import "https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/united/bootstrap.min.css";
+
 .App {
   text-align: center;
 }
@@ -26,6 +28,14 @@
 
 .App-link {
   color: #61dafb;
+}
+
+html {
+  font-size: 14px;
+}
+
+textarea {
+  font-family: 'Courier New', Courier, monospace;
 }
 
 @keyframes App-logo-spin {
