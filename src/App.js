@@ -63,21 +63,24 @@ const uiSchema = {
       }
     }
   },
-  // "stepNavigationRules": {
-  //   "ui:widget": "hidden"
-  // },
-  // "userInfoRules": {
-  //   "ui:widget": "hidden"
-  // },
-  // "progressRule": {
-  //   "ui:widget": "hidden"
-  // },
-  // "templateVariableRules": {
-  //   "ui:widget": "hidden"
-  // },
-  // "habitBuilderProgressRule": {
-  //   "ui:widget": "hidden"
-  // },
+  "stepNavigationRules": {
+    "ui:description": "disabled",
+    "ui:widget": "hidden"
+  },
+  "userInfoRules": {
+    "ui:description": "disabled",
+    "ui:widget": "hidden"
+  },
+  "progressRule": {
+    "ui:widget": "hidden"
+  },
+  "templateVariableRules": {
+    "ui:description": "disabled",
+    "ui:widget": "hidden"
+  },
+  "habitBuilderProgressRule": {
+    "ui:widget": "hidden"
+  },
   "ui:submitButtonOptions": {
     "norender": true,
   }
