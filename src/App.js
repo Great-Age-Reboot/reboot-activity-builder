@@ -1,5 +1,5 @@
 import './App.css';
-import Form from '@rjsf/material-ui/v5';
+import {default as Form, Widgets} from '@rjsf/material-ui/v5';
 import {Box, Tab, Tabs, TextField} from '@mui/material'
 import React from 'react';
 import MDEditor from '@uiw/react-md-editor';
@@ -14,7 +14,7 @@ function TabPanel(props) {
   );
 }
 
-function getMarkdownWidget(props) {
+function MarkdownWidget(props) {
   return (
     <MDEditor
       value={props.value}
@@ -23,8 +23,20 @@ function getMarkdownWidget(props) {
   );
 }
 
+function getMarkdownOrTextWidget(props) {
+  // For the QuestionStep text, this isn't markdown, but for the other types, it is
+  // To find out if we're QuestionStep text, we'll find that entry in the rootSchema and
+  // compare our props.schema to see if they're the same object.
+  const questionStepType = props.registry.rootSchema["$defs"].Step.oneOf.find((stepType) => stepType.title === "QuestionStep");
+  if (props.schema === questionStepType.properties.text) {
+    console.log(Widgets.TextWidget);
+    return Widgets.TextWidget(props);
+  }
+  return MarkdownWidget(props)
+}
+
 const schema = require('./schema.json');
-//  I haven't debugged this, but the $id property prevents rjsf-jsonschema-react from properly handling the json
+//  I haven't debugged this, but the $id property prevents react-jsonschema-form from properly handling the json
 delete schema["$id"];
 
 let exampleActivity = {};
@@ -37,23 +49,15 @@ const uiSchema = {
         "ui:readonly": true
       },
       "question": {
-        "ui:widget": getMarkdownWidget
+        "ui:widget": MarkdownWidget
       },
       "text": {
-        "ui:widget": getMarkdownWidget // this may not be markdown
+        "ui:widget": getMarkdownOrTextWidget // this may not be markdown
       },
       "formItems": {
         "items": {
           "text": {
-            "ui:widget": getMarkdownWidget
-          },
-          "answerFormat": {
-            "textChoices": {
-              "value": {
-                "ui:field": "NumberField",
-                "ui:widget": "TextWidget"
-              }
-            }
+            "ui:widget": MarkdownWidget
           }
         }
       }
