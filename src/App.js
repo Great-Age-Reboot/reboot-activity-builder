@@ -2,6 +2,8 @@ import './App.css';
 import Form from '@rjsf/core'
 import { default as Widgets } from '@rjsf/core/lib/components/widgets';
 import {Box, Tab, Tabs, TextField, Button} from '@mui/material'
+import ContentCopy from '@mui/icons-material/ContentCopy'
+import ContentPaste from '@mui/icons-material/ContentPaste'
 import React from 'react';
 import MDEditor from '@uiw/react-md-editor';
 import { default as Mermaid, getMermaidString } from "./Mermaid";
@@ -24,22 +26,34 @@ function MarkdownWidget(props) {
   );
 }
 
-const CopyButton = (props) => {
-  const [copyStatus, setCopyStatus] = React.useState('');
+const CopyPasteButtons = (props) => {
+  const { value, onChange, ...other } = props;
+  const [status, setStatus] = React.useState('');
 
   const copyToClipboard = async data => {
     try {
       await navigator.clipboard.writeText(data);
-      setCopyStatus('');
+      setStatus('');
     } catch (err) {
-      setCopyStatus('Unable to copy');
+      setStatus('Unable to copy');
+    }
+  };
+
+  const pasteFromClipboard = async () => {
+    try {
+      const data = await navigator.clipboard.readText();
+      onChange({"target": {"value": data}});
+      setStatus('');
+    } catch (err) {
+      setStatus('Unable to paste');
     }
   };
 
   return (
-    <div>
-      <Button onClick={() => copyToClipboard(props.value)}>Copy</Button>
-      {copyStatus}
+    <div {...other}>
+      <Button onClick={() => copyToClipboard(value)}><ContentCopy/></Button>
+      <Button onClick={() => pasteFromClipboard()}><ContentPaste/></Button>
+      {status}
     </div>
   )
 }
@@ -177,7 +191,10 @@ function App() {
         />
       </TabPanel>
       <TabPanel value={tabValue} index={1}>
-        <CopyButton value={formData.json} />
+        <CopyPasteButtons 
+          value={formData.json} 
+          onChange={e => handleFormDataJsonChange(e, e.target.value)}
+        />
         <TextField 
           value={formData.json} 
           multiline={true} 
