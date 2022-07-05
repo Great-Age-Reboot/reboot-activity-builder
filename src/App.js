@@ -1,7 +1,7 @@
 import './App.css';
 import Form from '@rjsf/core'
 import { default as Widgets } from '@rjsf/core/lib/components/widgets';
-import {Box, Tab, Tabs, TextField} from '@mui/material'
+import {Box, Tab, Tabs, TextField, Button} from '@mui/material'
 import React from 'react';
 import MDEditor from '@uiw/react-md-editor';
 import { default as Mermaid, getMermaidString } from "./Mermaid";
@@ -22,6 +22,26 @@ function MarkdownWidget(props) {
       onChange={(newValue) => props.onChange(newValue)}
     />
   );
+}
+
+const CopyButton = (props) => {
+  const [copyStatus, setCopyStatus] = React.useState('');
+
+  const copyToClipboard = async data => {
+    try {
+      await navigator.clipboard.writeText(data);
+      setCopyStatus('');
+    } catch (err) {
+      setCopyStatus('Unable to copy');
+    }
+  };
+
+  return (
+    <div>
+      <Button onClick={() => copyToClipboard(props.value)}>Copy</Button>
+      {copyStatus}
+    </div>
+  )
 }
 
 function getMarkdownOrTextWidget(props) {
@@ -157,6 +177,7 @@ function App() {
         />
       </TabPanel>
       <TabPanel value={tabValue} index={1}>
+        <CopyButton value={formData.json} />
         <TextField 
           value={formData.json} 
           multiline={true} 
