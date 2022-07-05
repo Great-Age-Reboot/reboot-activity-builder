@@ -2,7 +2,7 @@
   "name": "reboot-activity-builder",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://ubik2.github.io/reboot-activity-builder",
+  "homepage": "https://great-age-reboot.github.io/reboot-activity-builder",
   "dependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.0",
