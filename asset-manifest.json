@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/reboot-activity-builder/static/css/main.5056ad70.css",
-    "main.js": "/reboot-activity-builder/static/js/main.27494bc0.js",
+    "main.js": "/reboot-activity-builder/static/js/main.c7826acb.js",
     "static/js/787.e0766ec7.chunk.js": "/reboot-activity-builder/static/js/787.e0766ec7.chunk.js",
     "index.html": "/reboot-activity-builder/index.html",
     "main.5056ad70.css.map": "/reboot-activity-builder/static/css/main.5056ad70.css.map",
-    "main.27494bc0.js.map": "/reboot-activity-builder/static/js/main.27494bc0.js.map",
+    "main.c7826acb.js.map": "/reboot-activity-builder/static/js/main.c7826acb.js.map",
     "787.e0766ec7.chunk.js.map": "/reboot-activity-builder/static/js/787.e0766ec7.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.5056ad70.css",
-    "static/js/main.27494bc0.js"
+    "static/js/main.c7826acb.js"
   ]
 }
