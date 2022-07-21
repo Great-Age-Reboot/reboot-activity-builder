@@ -1,14 +1,14 @@
 import './App.css';
-import Form from '@rjsf/core'
+import Form, { IChangeEvent, UiSchema } from '@rjsf/core'
 import { default as Widgets } from '@rjsf/core/lib/components/widgets';
-import {Box, Tab, Tabs, TextField, Button} from '@mui/material'
+import { Box, Tab, Tabs, TextField, Button } from '@mui/material'
 import ContentCopy from '@mui/icons-material/ContentCopy'
 import ContentPaste from '@mui/icons-material/ContentPaste'
 import React from 'react';
 import MDEditor from '@uiw/react-md-editor';
-import { default as Mermaid, getMermaidString } from "./Mermaid";
+import { MermaidAdapter } from "./Mermaid";
 
-function TabPanel(props) {
+function TabPanel(props: { [x: string]: any; children: any; value: any; index: any; }) {
   const { children, value, index, ...other } = props;
   return (
     <div {...other}>
@@ -17,7 +17,7 @@ function TabPanel(props) {
   );
 }
 
-function MarkdownWidget(props) {
+function MarkdownWidget(props: { value: string; onChange: (arg0: string) => void; }) {
   return (
     <MDEditor
       value={props.value}
@@ -26,11 +26,11 @@ function MarkdownWidget(props) {
   );
 }
 
-const CopyPasteButtons = (props) => {
+const CopyPasteButtons = (props: { [x: string]: any; value: string; onChange: (arg0: string) => void; }) => {
   const { value, onChange, ...other } = props;
   const [status, setStatus] = React.useState('');
 
-  const copyToClipboard = async data => {
+  const copyToClipboard = async (data: string) => {
     try {
       await navigator.clipboard.writeText(data);
       setStatus('');
@@ -42,7 +42,7 @@ const CopyPasteButtons = (props) => {
   const pasteFromClipboard = async () => {
     try {
       const data = await navigator.clipboard.readText();
-      onChange({"target": {"value": data}});
+      onChange(data);
       setStatus('');
     } catch (err) {
       setStatus('Unable to paste');
@@ -58,11 +58,11 @@ const CopyPasteButtons = (props) => {
   )
 }
 
-function getMarkdownOrTextWidget(props) {
+function getMarkdownOrTextWidget(props: { registry?: any; schema?: any; value: string; onChange: (arg0: string) => void; }) {
   // For the QuestionStep text, this isn't markdown, but for the other types, it is
   // To find out if we're QuestionStep text, we'll find that entry in the rootSchema and
   // compare our props.schema to see if they're the same object.
-  const questionStepType = props.registry.rootSchema["$defs"].Step.oneOf.find((stepType) => stepType.title === "QuestionStep");
+  const questionStepType = props.registry.rootSchema["$defs"].Step.oneOf.find((stepType: { title: string; }) => stepType.title === "QuestionStep");
   if (props.schema === questionStepType.properties.text) {
     console.log(Widgets.TextWidget);
     return Widgets.TextWidget(props);
@@ -76,7 +76,7 @@ delete schema["$id"];
 
 let exampleActivity = {};
 
-const uiSchema = {
+const uiSchema: UiSchema = {
   "steps": {
     "ui:placeholder": "Choose one",
     "items": {
@@ -117,11 +117,13 @@ const uiSchema = {
   //   "ui:widget": "hidden"
   // },
   "ui:submitButtonOptions": {
+    "submitText": '',
     "norender": true,
+    "props": {}
   }
 }
 
-function jsonStringify(obj) {
+function jsonStringify(obj: { [s: string]: unknown; } ) {
   const optionalObjectProperties = [ "stepNavigationRules", "userInfoRules", "progressRule", "templateVariableRules", "habitBuilderProgressRule" ];
   let objCopy = {};
   for (const [key, value] of Object.entries(obj)) {
@@ -135,29 +137,32 @@ function jsonStringify(obj) {
 
 function App() {
   let exampleJson = jsonStringify(exampleActivity)
-  let mermaidString = getMermaidString(exampleActivity)
   const [tabValue, setTabValue] = React.useState(0);
   const [formData, setFormData] = React.useState({
     obj: exampleActivity, 
     json: exampleJson,
     error: false,
-    mermaid: mermaidString
   });
-  function handleTabChange(event, newTabValue) {
+  
+  function handleTabChange(event: React.SyntheticEvent, newTabValue: React.SetStateAction<number>) {
     setTabValue(newTabValue);
   }
-  function handleFormDataObjChange(event, newFormDataObj) {
-    const newFormData = {
-      obj: newFormDataObj,
-      json: jsonStringify(newFormDataObj),
+
+  function handleFormDataObjChange(event: IChangeEvent<{formData: {}}>) {
+    setFormData({
+      obj: event.formData,
+      json: jsonStringify(event.formData),
       error: false,
-      mermaid: getMermaidString(newFormDataObj)
-    }
-    setFormData(newFormData);
+    });
   }
-  function handleFormDataJsonChange(event, newFormDataJson) {
-    let newFormDataObj;
-    let error;
+
+  function handleFormDataJsonChange(event: React.ChangeEvent<HTMLInputElement>) {
+    handleFormDataJsonChangeValue(event.target.value);
+  }
+
+  function handleFormDataJsonChangeValue(newFormDataJson: string) {
+    let newFormDataObj: {};
+    let error: boolean;
     try {
       newFormDataObj = JSON.parse(newFormDataJson);
       error = false;
@@ -165,14 +170,13 @@ function App() {
       newFormDataObj = formData.obj;
       error = true;
     }
-    const newFormData = {
+    setFormData({
       obj: newFormDataObj,
       json: newFormDataJson,
       error: error,
-      mermaid: getMermaidString(newFormDataObj)
-    }
-    setFormData(newFormData);
+    });
   }
+
   return (
     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -187,26 +191,26 @@ function App() {
           schema={schema}
           formData={formData.obj}
           uiSchema={uiSchema}
-          onChange={e => handleFormDataObjChange(e, e.formData)}
+          onChange={handleFormDataObjChange}
         />
       </TabPanel>
       <TabPanel value={tabValue} index={1}>
         <CopyPasteButtons 
           value={formData.json} 
-          onChange={e => handleFormDataJsonChange(e, e.target.value)}
+          onChange={handleFormDataJsonChangeValue}
         />
         <TextField 
           value={formData.json} 
           multiline={true} 
           fullWidth={true}
-          onChange={e => handleFormDataJsonChange(e, e.target.value)}
+          onChange={handleFormDataJsonChange}
           helperText={formData.error ? "Invalid JSON" : "JSON"}
           error={formData.error}
         />
       </TabPanel>
       <TabPanel value={tabValue} index={2}>
         <div className="App">
-          <Mermaid chart={formData.mermaid} />
+          <MermaidAdapter task={formData.obj} />
         </div>
       </TabPanel>
     </Box>

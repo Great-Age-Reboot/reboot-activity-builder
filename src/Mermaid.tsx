@@ -5,14 +5,14 @@ mermaid.initialize({
   startOnLoad: true,
 });
 
-function getDestStepName(nodesById, stepIdentifier) {
+function getDestStepName(nodesById: { [x: string]: any; }, stepIdentifier: string) {
   if (stepIdentifier && stepIdentifier in nodesById) {
     return nodesById[stepIdentifier];
   }
   return "E";
 }
 
-function getStepProperties(steps, index) {
+function getStepProperties(steps: Step[], index: number): [Step | null, string, string] {
   if (index === -1) {
     return [null, "A", "start"];
   }
@@ -25,7 +25,7 @@ function getStepProperties(steps, index) {
   return [step, stepName, stepIdentifier];
 }
 
-function getLinksForNavRule(navRule, nodesById, stepName, predStepName) {
+function getLinksForNavRule(navRule: StepNavigationRule, nodesById: {}, stepName: string, predStepName: string) {
   let lines = [];
   lines.push(`${stepName} --> ${predStepName}{?}`);
   for (let j = 0; j < navRule.destinationStepIdentifiers.length; j++) {
@@ -39,7 +39,7 @@ function getLinksForNavRule(navRule, nodesById, stepName, predStepName) {
   return lines;
 }
 
-export function getMermaidString(obj) {
+export function getMermaidString(obj: NavigableTask) {
   let nodesById = {};
   if (obj && obj.steps) {
     let lines = ["flowchart LR"];
@@ -54,7 +54,7 @@ export function getMermaidString(obj) {
     // Add links between steps
     for (let i = -1; i < obj.steps.length; i++) {
       let [, stepName, stepIdentifier] = getStepProperties(obj.steps, i);
-      let navRule;
+      let navRule: StepNavigationRule;
       let predStepName = i >= 0 ? `P${i}` : "PA";
       if (obj.stepNavigationRules && stepIdentifier in obj.stepNavigationRules) {
         navRule = obj.stepNavigationRules[stepIdentifier];
@@ -82,11 +82,54 @@ export function getMermaidString(obj) {
   return "";
 }
 
-export default class Mermaid extends React.Component {
+interface NavigableTask {
+  steps?: Step[];
+  stepNavigationRules?: StepNavigationRules;
+}
+
+interface StepNavigationRule {
+  resultPredicates?: any[];
+  destinationStepIdentifiers?: string[];
+  defaultStepIdentifier?: string;
+}
+
+interface StepNavigationRules {
+  [s: string]: StepNavigationRule
+}
+
+interface Step {
+  identifier: string;
+}
+
+export interface MermaidAdapterProps {
+  task: NavigableTask;
+}
+
+export class MermaidAdapter extends React.Component<MermaidAdapterProps> {
+  text: string;
+
+  constructor(props: MermaidAdapterProps) {
+    super(props);
+    // reducer to convert updated task to text
+    this.text = getMermaidString(props.task)
+  }
+
+  render() {
+    return <Mermaid text={this.text}/>;
+  }
+}
+
+export interface MermaidProps {
+  text: string;
+}
+
+export class Mermaid extends React.Component<MermaidProps> {
+
   componentDidMount() {
     mermaid.contentLoaded();
   }
+
   render() {
-    return <div className="mermaid">{this.props.chart}</div>;
+    return <div className="mermaid">{this.props.text}</div>;
   }
 }
