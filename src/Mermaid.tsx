@@ -40,7 +40,7 @@ function getLinksForNavRule(navRule: StepNavigationRule, nodesById: {}, stepName
 }
 
 export function getMermaidString(obj: NavigableTask) {
-  let nodesById = {};
+  let nodesById: {[s:string]: string} = {};
   if (obj && obj.steps) {
     let lines = ["flowchart LR"];
     lines.push(`A((start))`);

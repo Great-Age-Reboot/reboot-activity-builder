@@ -8,14 +8,23 @@ import { TabPanel } from "./TabPanel";
 import { MarkdownWidget } from "./MarkdownWidget";
 import { CopyPasteButtons } from "./CopyPasteButtons";
 
-function getMarkdownOrTextWidget(props: { registry?: any; schema?: any; value: string; onChange: (arg0: string) => void }) {
+interface StringFieldProps {
+  registry: {
+    rootSchema: any
+  };
+  schema: object;
+  value: string;
+  onChange: (arg0: string) => void  
+}
+
+function getMarkdownOrTextWidget(props: StringFieldProps) {
   // For the QuestionStep text, this isn't markdown, but for the other types, it is
   // To find out if we're QuestionStep text, we'll find that entry in the rootSchema and
   // compare our props.schema to see if they're the same object.
-  const questionStepType = props.registry.rootSchema["$defs"].Step.oneOf.find(
+  const questionStepTextSchema= props.registry.rootSchema["$defs"].Step.oneOf.find(
     (stepType: { title: string }) => stepType.title === "QuestionStep"
-  );
-  if (props.schema === questionStepType.properties.text) {
+  ).properties["text"];
+  if (props.schema === questionStepTextSchema) {
     return Widgets.TextWidget(props);
   }
   return <MarkdownWidget {...props} />;
@@ -72,7 +81,7 @@ const uiSchema: UiSchema = {
   },
 };
 
-function jsonStringify(obj: { [s: string]: unknown }) {
+function jsonStringify(obj: { [s: string]: any }) {
   const optionalObjectProperties = [
     "stepNavigationRules",
     "userInfoRules",
@@ -80,7 +89,7 @@ function jsonStringify(obj: { [s: string]: unknown }) {
     "templateVariableRules",
     "habitBuilderProgressRule",
   ];
-  let objCopy = {};
+  let objCopy: {[s: string]: any } = {};
   for (const [key, value] of Object.entries(obj)) {
     if (!optionalObjectProperties.includes(key) || Object.keys(value).length !== 0) {
       objCopy[key] = value;
@@ -91,7 +100,7 @@ function jsonStringify(obj: { [s: string]: unknown }) {
 }
 
 class App extends React.Component<{}, { tabValue: number; obj: {}; json: string; error: boolean }> {
-  constructor(props) {
+  constructor(props: {} | Readonly<{}>) {
     super(props);
     this.handleTabChange = this.handleTabChange.bind(this);
     this.handleFormDataObjChange = this.handleFormDataObjChange.bind(this);

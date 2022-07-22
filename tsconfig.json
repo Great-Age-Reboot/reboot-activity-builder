@@ -2,9 +2,10 @@
     "compilerOptions": {
         "jsx": "react",
         "esModuleInterop": true,
-        "outDir": "./built",
+        "outDir": "./build",
         "allowJs": true,
-        "target": "es5"
+        "target": "es5",
+        "noImplicitAny": true,
     },
     "include": ["./src/**/*"]
 }

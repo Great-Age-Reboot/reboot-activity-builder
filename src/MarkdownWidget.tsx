@@ -1,8 +1,8 @@
 import React from "react";
 import MDEditor, { ContextStore } from "@uiw/react-md-editor";
 
-export class MarkdownWidget extends React.Component<{ value: string, onChange: (arg0: string) => void }, { markdown: string }> {
-  constructor(props: { value: string, onChange: (arg0: string) => void }) {
+export class MarkdownWidget extends React.Component<{ value: string; onChange: (arg0: string) => void }, { markdown: string }> {
+  constructor(props: { value: string; onChange: (arg0: string) => void }) {
     super(props);
     this.state = { markdown: props.value };
     this.handleChange = this.handleChange.bind(this);
